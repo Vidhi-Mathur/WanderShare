@@ -41,6 +41,6 @@ const place = new schema({
         type: mongoose.Schema.ObjectId,
         ref: 'User'
     }]
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('Place', place)
