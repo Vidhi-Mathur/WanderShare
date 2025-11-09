@@ -1,27 +1,24 @@
 import express from 'express'
-import { createPlace, getAllPlaces, getPlaceByPlaceId, updatePlaceByPlaceId, deletePlaceByPlaceId, likeUnlikePlace, getPlacesByUserId } from '../controllers/place-controller.js'
+import { createPlace, getAllPlaces, getPlaceByPlaceId } from '../controllers/place-controller.js'
 import { authorizationMiddleware } from '../controllers/user-controller.js'
 const router = express.Router()
 
-//POST	/wandershare/ -> Create a new place (image upload + geotag)
+//POST /wandershare/place/ -> Create a new place (image upload + geotag)
 router.post('/', authorizationMiddleware, createPlace)
 
-//GET	/wandershare ->	Get all places (with search, filter, and sort support)
+//GET /wandershare ->	Get all places (with search, filter, and sort support)
 router.get('/', getAllPlaces)
 
-//GET	/wandershare/:placeId -> Get single place by ID
+//GET /wandershare/:placeId -> Get single place by ID
 router.get('/:placeId', getPlaceByPlaceId)
 
-//PATCH	/wandershare/:placeId -> Update place details (only by creator)
-router.patch('/:placeId', authorizationMiddleware,updatePlaceByPlaceId)
+// //DELETE  /wandershare/:placeId -> Delete a place (only by creator)
+// router.delete('/:placeId', authorizationMiddleware, deletePlaceByPlaceId)
 
-//DELETE  /wandershare/:placeId -> Delete a place (only by creator)
-router.delete('/:placeId', authorizationMiddleware, deletePlaceByPlaceId)
+// //POST	/wandershare/:placeId/like -> Like/unlike a place
+// router.post('/:placeId/like', authorizationMiddleware, likeUnlikePlace)
 
-//POST	/wandershare/:placeId/like -> Like/unlike a place
-router.post('/:placeId/like', authorizationMiddleware, likeUnlikePlace)
-
-//GET  /wandershare/user/:userId -> Get all places created by a specific user
-router.get('/user/:userId', getPlacesByUserId)
+// //GET  /wandershare/user/:userId -> Get all places created by a specific user
+// router.get('/user/:userId', getPlacesByUserId)
 
 export default router

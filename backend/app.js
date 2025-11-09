@@ -3,8 +3,17 @@ dotenv.config()
 import express from 'express'
 import mongoose from 'mongoose' 
 import userRoutes from './routes/user-route.js'
+import placeRoutes from "./routes/place-route.js"
+import reviewRoutes from "./routes/review-route.js"
+import cors from "cors"
+import { fileUpload, upload } from './util/file-upload.js'
+import { authorizationMiddleware } from './controllers/user-controller.js'
 
 const app = express()
+
+app.use(cors({
+    origin: 'http://localhost:5173'
+}))
 
 //Parsing JSON bodies
 app.use(express.json({limit: '50mb'}))
@@ -13,7 +22,13 @@ app.use(express.json({limit: '50mb'}))
 app.use(express.urlencoded({extended: true, limit: '50mb'}))
 
 //Forwarding
-app.use('/', userRoutes)
+app.post('/upload-image', authorizationMiddleware, upload.array('images', 10), fileUpload);
+app.use('/user', userRoutes)
+app.use('/place', placeRoutes)
+app.use('/review', reviewRoutes)
+
+//Serving statically
+app.use('/uploads/images', express.static('uploads/images'))
 
 //Error Handling
 app.use((err, req, res, next) => {

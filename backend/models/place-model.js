@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose"
 const schema = mongoose.Schema
 
 const place = new schema({
@@ -10,11 +10,11 @@ const place = new schema({
         type: String, 
         required: true
     },
-    address: {
-        type: String, 
-        required: true
-    },
     location: {
+        address: {
+            type: String, 
+            required: true
+        },
         lat: {
             type: Number, 
             required: true
@@ -43,4 +43,5 @@ const place = new schema({
     }]
 }, { timestamps: true })
 
-module.exports = mongoose.model('Place', place)
+const Place = mongoose.model('Place', place)
+export default Place
