@@ -13,9 +13,9 @@ export const HomePage = () => {
             </div>
             <div className="relative z-10">
                 <HeroSection />
-                <GallerySection />
-                <ExperienceFlowSection />
-                <JoinNowSection />
+                <div id="gallery"><GallerySection /></div>
+                <div id="experience"><ExperienceFlowSection /></div>
+                <div id="join"><JoinNowSection /></div>
             </div>
         </main>
     )

@@ -1,15 +1,10 @@
 import { ArrowRight, Sparkles, Flame } from "lucide-react"
 import DilliHaat from "../../../assets/Dilli_Haat.jpg"
+import { Link } from "react-router-dom"
 
 export const HeroSection = () => {
   return (
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24">
-            <div className="absolute inset-0">
-                <div className="glow-blob-1 absolute top-20 left-1/3 w-80 h-80 rounded-full blur-3xl bg-primary/30" />
-                <div className="glow-blob-2 absolute bottom-32 right-1/4 w-96 h-96 rounded-full blur-3xl bg-accent/30" />
-                <div className="glow-blob-3 absolute top-1/2 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full blur-3xl bg-primary-light/40" />
-                <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-background" />
-            </div>
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8">
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
                     <div className="space-y-8 z-10">
@@ -33,16 +28,13 @@ export const HeroSection = () => {
                             </p>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-4 pt-8">
-                            <button className="group relative px-8 py-4 bg-linear-to-r from-primary to-accent text-primary-foreground rounded-2xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all overflow-hidden">
+                            <Link to="/places" className="group relative px-8 py-4 bg-linear-to-r from-primary to-accent text-primary-foreground rounded-2xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all overflow-hidden">
                                 <span className="relative z-10 flex items-center justify-center gap-2">
-                                    Start Discovering
+                                    Explore Gallery
                                     <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
                                 </span>
                                 <div className="absolute inset-0 bg-linear-to-r from-primary-dark to-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </button>
-                            <button className="px-8 py-4 border-2 border-primary/50 text-primary rounded-2xl font-bold text-lg hover:bg-primary/10 hover:border-primary transition-all">
-                              Explore Gallery
-                            </button>
+                            </Link>
                         </div>
                     </div>
                     <div className="relative h-96 sm:h-full lg:h-screen max-h-[600px] lg:max-h-none">

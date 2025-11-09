@@ -1,6 +1,10 @@
 import { ArrowRight, Sparkles, Zap } from "lucide-react"
+import { useContext } from "react"
+import { Link } from "react-router-dom"
+import { AuthContext } from "../../../store/Auth-Context"
 
 export const JoinNowSection = () =>{
+    const { token } = useContext(AuthContext)
     return (
         <section className="py-40 bg-linear-to-b from-background to-primary-light/10 relative overflow-hidden">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
@@ -26,17 +30,13 @@ export const JoinNowSection = () =>{
                         </p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-                        <button className="group relative px-10 py-5 bg-linear-to-r from-primary to-accent text-primary-foreground rounded-2xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all overflow-hidden font-poppins">
+                        <Link to={`${token? '/add-place': '/access-denied'}`} className="group relative px-10 py-5 bg-linear-to-r from-primary to-accent text-primary-foreground rounded-2xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all overflow-hidden font-poppins">
                             <span className="relative z-10 flex items-center justify-center gap-2">
                                 Get Started Free
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
                             </span>
                             <div className="absolute inset-0 bg-linear-to-r from-primary-dark to-accent opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </button>
-                        <button className="px-10 py-5 border-2 border-primary/50 text-primary rounded-2xl font-bold text-lg hover:bg-primary/10 hover:border-primary transition-all flex items-center justify-center gap-2 group font-poppins">
-                            <Zap className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                            Learn More
-                        </button>
+                        </Link>
                     </div>
                     <div className="pt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground font-poppins">
                         <div className="flex items-center gap-2">

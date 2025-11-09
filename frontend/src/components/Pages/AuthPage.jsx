@@ -13,7 +13,7 @@ export const AuthPage = () => {
                 <AuthHeroSection />
             </div>
             <div className="flex flex-col justify-center items-center w-full max-w-md mx-auto lg:items-start">
-                <AuthForm signup={signup} />
+                <AuthForm signupMode={signup} />
                 <div className="w-full mt-6 text-center">
                     <p className="text-sm text-gray-600">
                         {signup ? "Already have an account?" : "Don't have an account?"}{" "}

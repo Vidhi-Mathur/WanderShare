@@ -6,6 +6,7 @@ import HauzKhas from '../../../assets/Hauz_Khas.jpg';
 import LotusTemple from '../../../assets/Lotus_Temple.jpg';
 import DamdamaLake from '../../../assets/Damdama_Lake.jpg';
 import QutubMinar from '../../../assets/Qutub_Minar.jpg';
+import { Link } from "react-router-dom";
 
 const galleryItems = [
   {
@@ -166,12 +167,12 @@ export const GallerySection = () => {
                     ))}
                 </div>
                 <div className="text-center mt-20">
-                    <button className="group relative px-10 py-4 bg-linear-to-r from-primary to-accent text-primary-foreground rounded-2xl font-bold text-lg hover:shadow-2xl transition-all overflow-hidden">
+                    <Link to="/places" className="group relative inline-flex items-center justify-center px-10 py-4 bg-linear-to-r from-primary to-accent text-primary-foreground rounded-2xl font-bold text-lg hover:shadow-2xl transition-all overflow-hidden">
                         <span className="relative z-10 flex items-center justify-center gap-2 font-poppins">
                             Explore Full Gallery
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
                         </span>
-                    </button>
+                    </Link>
                 </div>
             </div>
         </section>
