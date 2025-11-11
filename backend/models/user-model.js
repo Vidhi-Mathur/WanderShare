@@ -22,6 +22,10 @@ const user = new schema({
     reviews: [{
         type: mongoose.Schema.ObjectId,
         ref: 'Review'
+    }],
+    likedPlaces: [{
+        type: mongoose.Schema.ObjectId,
+        ref: "Place"
     }]
 })
 

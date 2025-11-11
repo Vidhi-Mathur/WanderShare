@@ -137,7 +137,6 @@ export const getPlaceByPlaceId = async(req, res, next) => {
     }
 };
 
-
 // export const deletePlaceByPlaceId = async(req, res, next) => {
 //     try {
 //         const { placeId } = req.params
@@ -150,14 +149,40 @@ export const getPlaceByPlaceId = async(req, res, next) => {
 //     }
 // }
 
-// export const likeUnlikePlace = async(req, res, next) => {
-//     try {
-
-//     }
-//     catch(err){
-//         next(err)
-//     }
-// }
+export const likeUnlikePlace = async (req, res) => {
+  try {
+        const userId = req.user._id; 
+        const { placeId } = req.params;
+        const existingPlace = await Place.findById(placeId);
+        if(!existingPlace){
+            return res.status(404).json({ message: "Place not found" });
+        }
+        const existingUser = await User.findById(userId);
+        if(!existingUser){
+            return res.status(404).json({ message: "User not found" });
+        }
+        let liked;
+        //Already liked, so unline
+        if(existingPlace.likes.includes(userId)){
+            //Unlike
+            existingPlace.likes.pull(userId);
+            existingUser.likedPlaces.pull(placeId);
+            liked = false;
+        } 
+        //Not liked, so like
+        else {
+          existingPlace.likes.push(userId);
+          existingUser.likedPlaces.push(placeId);
+          liked = true;
+        }
+        await existingPlace.save();
+        await existingUser.save();
+        res.status(200).json({ message: liked? "Place liked" :"Place unliked", liked, likesCount: existingPlace.likes.length })
+    }     
+    catch(err){
+        next(err)
+    }
+};
 
 // export const getPlacesByUserId = async(req, res, next) => {
 //     try {

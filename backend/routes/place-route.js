@@ -1,5 +1,5 @@
 import express from 'express'
-import { createPlace, getAllPlaces, getPlaceByPlaceId } from '../controllers/place-controller.js'
+import { createPlace, getAllPlaces, getPlaceByPlaceId, likeUnlikePlace } from '../controllers/place-controller.js'
 import { authorizationMiddleware } from '../controllers/user-controller.js'
 const router = express.Router()
 
@@ -16,7 +16,7 @@ router.get('/:placeId', getPlaceByPlaceId)
 // router.delete('/:placeId', authorizationMiddleware, deletePlaceByPlaceId)
 
 // //POST	/wandershare/:placeId/like -> Like/unlike a place
-// router.post('/:placeId/like', authorizationMiddleware, likeUnlikePlace)
+router.post('/:placeId/like', authorizationMiddleware, likeUnlikePlace)
 
 // //GET  /wandershare/user/:userId -> Get all places created by a specific user
 // router.get('/user/:userId', getPlacesByUserId)

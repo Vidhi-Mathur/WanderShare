@@ -57,23 +57,15 @@ export const postLogin = async(req, res, next) => {
         next(err)
     }
 }
-
-export const postLogout = async(req, res, next) => {
+export const postLogout = async (req, res, next) => {
     try {
-        let authorization = await req.headers.authorization
-        if(!authorization) return res.status(401).json({ message: 'Unauthorized' })
-        //Not a token
-        let token = await authorization.split(' ')[1]
-        const decodedToken = jwt.decode(token);
-        //Assuming the `_id` field is included in the token payload
-        const userId = decodedToken._id;
-        if(!userId) return res.status(400).json({ message: 'Invalid token' });
-        res.status(200).json({ message: 'Logged out successfully' })
-    }
-    catch(err) {
+        res.status(200).json({ message: "Logged out successfully" });
+    } 
+    catch(err){
         next(err)
     }
-}
+};
+
 
 export const authorizationMiddleware = async(req, res, next) => {
     try {
