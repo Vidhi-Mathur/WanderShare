@@ -1,5 +1,4 @@
 import { Heart, MessageCircle, Star, TrendingUp, MapPin, Share2, ArrowRight } from "lucide-react"
-import { useState } from "react"
 import ChandniChowk from '../../../assets/Chandni_Chowk.jpg';
 import IndiaGate from '../../../assets/India_Gate.jpg';
 import HauzKhas from '../../../assets/Hauz_Khas.jpg';
@@ -84,12 +83,6 @@ const galleryItems = [
 ];
 
 export const GallerySection = () => {
-    const [likedIds, setLikedIds] = useState([])
-
-    const likeToggler = (id) => {
-        setLikedIds((prev) => (prev.includes(id) ? prev.filter((l) => l !== id) : [...prev, id]))
-    }
-
     return (
         <section className="py-32 bg-linear-to-b from-background via-primary-light/5 to-background">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -148,10 +141,10 @@ export const GallerySection = () => {
                                 </div>
                                 <div className="flex items-center justify-between pt-3 border-t border-border/30">
                                     <div className="flex items-center gap-3">
-                                        <button onClick={() => likeToggler(item.id)} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-primary/10 transition-all group/like font-poppins">
-                                            <Heart className={`w-4 h-4 transition-all ${likedIds.includes(item.id)? "fill-accent text-accent scale-110": "text-muted-foreground group-hover/like:text-accent" }`}/>
-                                            <span className={`text-xs font-semibold transition-colors ${likedIds.includes(item.id)? "text-accent" : "text-muted-foreground" }`}>
-                                                {item.likes + (likedIds.includes(item.id) ? 1 : 0)}
+                                        <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-primary/10 transition-all group/like font-poppins">
+                                            <Heart className="w-4 h-4 transition-all text-muted-foreground group-hover/like:text-accent"/>
+                                            <span className="text-xs font-semibold transition-colors text-muted-foreground">
+                                                {item.likes}
                                             </span>
                                         </button>
                                         <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-accent/10 transition-all group/comment font-poppins">

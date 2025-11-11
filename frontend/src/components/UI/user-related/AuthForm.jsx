@@ -105,15 +105,15 @@ export const AuthForm = ({ signupMode }) => {
                             </label>
                         </div>
                     )}
-                    <button type="submit" disabled={loading} className="w-full py-3 px-4 bg-linear-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white font-poppins font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-green-600/30 mt-6">
+                    <button type="submit" disabled={loading} className="w-full flex justify-center items-center gap-2 py-3 px-4 bg-linear-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white font-poppins font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-green-600/30 mt-6">
                         {loading ? (
-                        <>
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                            Processing...
-                        </>
-                    ) : (
-                        signupMode? "Create Account":"Sign In"
-                    )}
+                          <div className="flex justify-center items-center gap-2">
+                                <Loader2 className="w-6 h-6 animate-spin" />
+                                <span>Processing...</span>
+                          </div>
+                        ) : (
+                            signupMode ? "Create Account" : "Sign In"
+                        )}
                     </button>
                 </form>
             </div>

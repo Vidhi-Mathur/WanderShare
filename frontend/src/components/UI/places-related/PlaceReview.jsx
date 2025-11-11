@@ -1,6 +1,7 @@
 import { useContext, useState } from "react"
 import { Star, Send } from "lucide-react"
 import { AuthContext } from "../../../store/Auth-Context"
+import { Link } from "react-router-dom"
 
 export const PlaceReview = ({ reviews, placeId }) => {
     const { token } = useContext(AuthContext)
@@ -61,26 +62,37 @@ export const PlaceReview = ({ reviews, placeId }) => {
                 </div>
             </div>
             <div className="mb-8 pb-8 border-b border-border">
-                <h3 className="font-poppins font-semibold text-foreground mb-4">Share your experience</h3>
-                <div className="space-y-4">
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm font-poppins text-muted-foreground">Your rating:</span>
-                        <div className="flex gap-1">
-                            {[...Array(5)].map((_, i) => (
-                                <button key={i} onClick={() => setReview((prev) => ({ ...prev, rating: i + 1 }))} className="transition-transform duration-300 hover:scale-110">
-                                    <Star size={24} className={`${i < review.rating? "fill-yellow-400 text-yellow-400": "text-gray-300" } transition-colors duration-300`}/>
-                                </button>
-                            ))}
+                {token? (
+                    <>
+                    <h3 className="font-poppins font-semibold text-foreground mb-4">Share your experience</h3>
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm font-poppins text-muted-foreground">Your rating:</span>
+                            <div className="flex gap-1">
+                                {[...Array(5)].map((_, i) => (
+                                    <button key={i} onClick={() => setReview((prev) => ({ ...prev, rating: i + 1 }))} className="transition-transform duration-300 hover:scale-110">
+                                        <Star size={24} className={`${i < review.rating? "fill-yellow-400 text-yellow-400": "text-gray-300" } transition-colors duration-300`}/>
+                                    </button>
+                                ))}
+                            </div>
                         </div>
+                        <div className="flex gap-3">
+                            <textarea value={review.comment} onChange={(e) => setReview((prev) => ({ ...prev, comment: e.target.value }))} placeholder="Share your thoughts about this place..." className="flex-1 bg-background/50 border border-border rounded-lg px-4 py-3 font-poppins text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary transition-colors duration-300 resize-none" rows={3} />
+                            <button onClick={submitHandler} disabled={loading || !review.comment.trim() || review.rating === 0} className="bg-primary hover:bg-primary/90 disabled:bg-primary/50 text-white p-3 rounded-lg transition-colors duration-300">
+                                {loading ? "..." : <Send size={20} />}
+                            </button>
+                        </div>
+                        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
                     </div>
-                    <div className="flex gap-3">
-                        <textarea value={review.comment} onChange={(e) => setReview((prev) => ({ ...prev, comment: e.target.value }))} placeholder="Share your thoughts about this place..." className="flex-1 bg-background/50 border border-border rounded-lg px-4 py-3 font-poppins text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary transition-colors duration-300 resize-none" rows={3} />
-                        <button onClick={submitHandler} disabled={loading || !review.comment.trim() || review.rating === 0} className="bg-primary hover:bg-primary/90 disabled:bg-primary/50 text-white p-3 rounded-lg transition-colors duration-300">
-                            {loading ? "..." : <Send size={20} />}
-                        </button>
+                    </>
+                ): (
+                    <div className="text-center py-8">
+                        <p className="text-muted-foreground mb-4 font-poppins">Please log in to share your experience</p>
+                        <Link to="/auth" className="inline-block bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg transition-colors duration-300 font-poppins font-semibold">
+                            Log In
+                        </Link>
                     </div>
-                    {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-                </div>
+                )}
             </div>
             <div className="space-y-6">
                 {reviews.length > 0 ? (

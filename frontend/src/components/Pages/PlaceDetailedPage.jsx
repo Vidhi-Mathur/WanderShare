@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { PlaceImageGallery } from "../UI/places-related/PlaceImageGallery"
 import { PlaceInfo } from "../UI/places-related/PlaceInfo"
 import { PlaceReview } from "../UI/places-related/PlaceReview"
 import { Loader2 } from "lucide-react"
+import { toggleLikePlace } from "../../services/LikeService"
+import { AuthContext } from "../../store/Auth-Context"
 
 export const PlaceDetailedPage = () => {
     const params = useParams()
+    const { token } = useContext(AuthContext);
     const placeId = params.placeId
     const [place, setPlace] = useState()
     const [error, setError] = useState(null)
@@ -78,9 +81,20 @@ export const PlaceDetailedPage = () => {
     }
 
 
-    const handleLike = () => {
-        setIsLiked(!isLiked)
-        setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
+    const likeToggler = async(e) => {
+        e.preventDefault()
+        setLoading(true)
+        try {
+            const result = await toggleLikePlace(place._id, token);
+            setIsLiked(result.liked ?? !isLiked);
+            setLikeCount(result.likesCount ?? (isLiked ? likeCount - 1 : likeCount + 1));
+        } 
+        catch(err){
+            setError(err.message)
+        } 
+        finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -91,7 +105,7 @@ export const PlaceDetailedPage = () => {
                         <PlaceImageGallery images={place.images} />
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12">
                             <div className="lg:col-span-2">
-                                <PlaceInfo place={place} likeCount={likeCount} isLiked={isLiked} onLike={handleLike} />
+                                <PlaceInfo place={place} likeCount={likeCount} isLiked={isLiked} onLike={likeToggler} />
                             </div>
                             <div className="lg:col-span-1">
                                 <div className="glass-card rounded-2xl p-6 backdrop-blur-xl">

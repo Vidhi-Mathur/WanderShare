@@ -1,15 +1,31 @@
 import { useState } from "react"
 import { Heart, MapPin, Calendar, MessageCircle } from "lucide-react"
 import { Link } from "react-router-dom"
+import { toggleLikePlace } from "../../../services/LikeService"
+import { useContext } from "react"
+import { AuthContext } from "../../../store/Auth-Context"
 
 export const PlaceCard = ({ place }) => {
+    const { token } = useContext(AuthContext);
     const [isLiked, setIsLiked] = useState(false)
     const [likeCount, setLikeCount] = useState(place.likes.length)
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null)
 
-    const handleLike = (e) => {
+    const likeToggler = async(e) => {
         e.preventDefault()
-        setIsLiked(!isLiked)
-        setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
+        setLoading(true)
+        try {
+            const result = await toggleLikePlace(place._id, token);
+            setIsLiked(result.liked ?? !isLiked);
+            setLikeCount(result.likesCount ?? (isLiked ? likeCount - 1 : likeCount + 1));
+        } 
+        catch(err){
+            setError(err.message)
+        } 
+        finally {
+            setLoading(false);
+        }
     }
 
     const formatDate = (dateString) =>
@@ -30,8 +46,8 @@ export const PlaceCard = ({ place }) => {
                                 +{place.images.length - 1} more
                             </div>
                         )}
-                        <button onClick={handleLike} className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md hover:bg-white p-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl" >
-                            <Heart size={20} className={`transition-all duration-300 ${isLiked ? "fill-red-500 text-red-500" : "text-gray-700"}`} />
+                        <button onClick={likeToggler} disabled={loading} className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md hover:bg-white p-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl">
+                            <Heart size={20} className={`transition-all duration-300 ${   isLiked ? "fill-red-500 text-red-500" : "text-gray-700" }`}/>
                         </button>
                     </div>
                     <div className="p-6 flex flex-col grow">
