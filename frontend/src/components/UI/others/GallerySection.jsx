@@ -104,7 +104,7 @@ export const GallerySection = () => {
                     {galleryItems.map((item) => (
                         <div key={item.id} className={`${item.span} group cursor-pointer relative overflow-hidden rounded-2xl bg-card border border-border/50 hover:border-accent/50 transition-all hover:shadow-xl`}>
                             <div className={`relative overflow-hidden ${item.height} photo-frame`}>
-                                <img src={item.image || "/placeholder.svg"} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>
+                                <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>
                                 <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-6">
                                     <div className="flex justify-between items-start">
                                         <div className="flex items-center gap-2 px-4 py-2 bg-white/25 backdrop-blur-md rounded-full border border-white/30">

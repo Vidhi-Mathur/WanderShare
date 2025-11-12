@@ -1,15 +1,15 @@
 import { useContext, useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { PlaceImageGallery } from "../UI/places-related/PlaceImageGallery"
 import { PlaceInfo } from "../UI/places-related/PlaceInfo"
 import { PlaceReview } from "../UI/places-related/PlaceReview"
-import { Loader2 } from "lucide-react"
+import { Loader2, TriangleAlert } from "lucide-react"
 import { toggleLikePlace } from "../../services/LikeService"
-import { AuthContext } from "../../store/Auth-Context"
+import { AuthContext } from "../../utils/authContext"
 
 export const PlaceDetailedPage = () => {
     const params = useParams()
-    const { token } = useContext(AuthContext);
+    const { token, details } = useContext(AuthContext);
     const placeId = params.placeId
     const [place, setPlace] = useState()
     const [error, setError] = useState(null)
@@ -40,10 +40,20 @@ export const PlaceDetailedPage = () => {
         fetchPlaceByPlaceId()
     },  [placeId])
 
+    useEffect(() => {
+        if(place && details?.id) {
+            const userHasLiked = place.likes.some(like => 
+                like === details?.id || like._id === details?.id
+            )
+            setIsLiked(userHasLiked)
+            setLikeCount(place.likes.length)
+        }
+    }, [place, details?.id])
+
 
    if(loading){
         return (
-            <main className="min-h-screen flex flex-col items-center justify-center text-[#2f5d50] bg-linear-to-b from-white to-emerald-50">
+            <main className="min-h-screen flex flex-col items-center justify-center text-primary bg-linear-to-b from-background to-muted">
                 <div className="glass-card rounded-2xl px-10 py-12 text-center backdrop-blur-xl border border-white/40 shadow-xl">
                     <div className="flex flex-col items-center gap-4">
                         <Loader2 className="w-10 h-10 text-emerald-600 animate-spin" />
@@ -64,8 +74,9 @@ export const PlaceDetailedPage = () => {
 
     if(error){
         return (
-            <main className="min-h-screen flex items-center justify-center px-4">
-                <div className="max-w-md w-full p-4 rounded-lg bg-[#dc2626] text-white text-center">
+            <main className="min-h-screen flex flex-col items-center justify-center px-4 space-y-3">
+                <TriangleAlert className="w-24 h-24 text-red-600" />
+                <div className="max-w-md w-full p-4 rounded-lg bg-red-600 text-white text-center font-medium shadow-md">
                     {error}
                 </div>
             </main>
@@ -74,7 +85,7 @@ export const PlaceDetailedPage = () => {
 
     if(!place){
         return (
-            <main className="min-h-screen flex items-center justify-center text-[#4a6d5f]">
+            <main className="min-h-screen flex items-center justify-center text-muted-foreground">
                 <p>Place not found.</p>
             </main>
         )
@@ -83,7 +94,6 @@ export const PlaceDetailedPage = () => {
 
     const likeToggler = async(e) => {
         e.preventDefault()
-        setLoading(true)
         try {
             const result = await toggleLikePlace(place._id, token);
             setIsLiked(result.liked ?? !isLiked);
@@ -92,9 +102,6 @@ export const PlaceDetailedPage = () => {
         catch(err){
             setError(err.message)
         } 
-        finally {
-            setLoading(false);
-        }
     }
 
     return (
@@ -118,9 +125,9 @@ export const PlaceDetailedPage = () => {
                                             {place.creator.name}
                                         </h4>
                                         <p className="text-sm text-muted-foreground mb-4">{place.creator._id}</p>
-                                        <button className="w-full py-2 bg-primary text-white rounded-lg font-poppins font-medium hover:bg-primary/90 transition-colors duration-300">
+                                        <Link to={`/user/${place.creator._id}`} className="w-full py-2 bg-primary text-white rounded-lg font-poppins font-medium hover:bg-primary/90 transition-colors duration-300">
                                             View Profile
-                                        </button>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

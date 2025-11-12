@@ -1,7 +1,8 @@
 import { useContext, useState } from "react"
 import { Star, Send } from "lucide-react"
-import { AuthContext } from "../../../store/Auth-Context"
 import { Link } from "react-router-dom"
+import { AuthContext } from "../../../utils/authContext"
+import { formatDate } from "../../../utils/formatDate"
 
 export const PlaceReview = ({ reviews, placeId }) => {
     const { token } = useContext(AuthContext)
@@ -36,14 +37,6 @@ export const PlaceReview = ({ reviews, placeId }) => {
             setLoading(false)
         }
     }
-
-    const formatDate = (dateString) => (
-        new Date(dateString).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric"
-        })
-    )
 
     const averageRating = reviews.length > 0? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1): 0
 

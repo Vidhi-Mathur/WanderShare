@@ -49,8 +49,8 @@ export const DisplayPlacesPage = () => {
             <section className="pt-20 pb-12 px-4 md:px-8">
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-12">
-                        <h1 className="font-playfair text-5xl md:text-6xl font-bold text-[#0f2818] mb-4">Explore Places</h1>
-                        <p className="text-lg text-[#4a6d5f] max-w-2xl mx-auto">
+                        <h1 className="font-playfair text-5xl md:text-6xl font-bold text-foreground mb-4">Explore Places</h1>
+                        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                             Discover incredible destinations shared by our global travel community
                         </p>
                     </div>
@@ -60,14 +60,14 @@ export const DisplayPlacesPage = () => {
             {error && (
                 <section className="px-4 md:px-8 pb-8">
                     <div className="max-w-6xl mx-auto">
-                        <div className="p-4 rounded-lg bg-[#dc2626] text-white">{error}</div>
+                        <div className="p-4 rounded-lg bg-destructive text-destructive-foreground">{error}</div>
                     </div>
                 </section>
             )}
             {loading && places.length === 0 && (
                 <section className="flex items-center justify-center min-h-[50vh] px-4 md:px-8">
                     <div className="glass-card rounded-2xl px-8 py-10 text-center backdrop-blur-xl border border-white/50 shadow-xl">
-                        <div className="flex flex-col items-center gap-4 text-[#2f5d50]">
+                        <div className="flex flex-col items-center gap-4 text-primary">
                             <Loader2 className="w-10 h-10 animate-spin text-emerald-600" />
                             <div>
                                 <h3 className="font-playfair text-xl font-bold text-green-900 mb-1">
@@ -94,7 +94,7 @@ export const DisplayPlacesPage = () => {
             )}
             {!loading && places.length === 0 && !error && (
                 <section className="px-4 md:px-8 pb-20">
-                    <div className="max-w-6xl mx-auto text-center text-[#4a6d5f]">
+                    <div className="max-w-6xl mx-auto text-center text-muted-foreground">
                         <p>No places found. Try adjusting your filters.</p>
                     </div>
                 </section>

@@ -19,7 +19,7 @@ export const PlaceImageGallery = ({ images }) => {
     return (
         <div className="w-full">
             <div className="relative w-full h-96 md:h-[500px] rounded-2xl overflow-hidden glass-card">
-                <img src={images[currentImageIndex] || "/placeholder.svg"} alt={`Image ${currentImageIndex + 1}`} className="w-full h-full object-cover"/>
+                <img src={images[currentImageIndex]} alt={`Image ${currentImageIndex + 1}`} className="w-full h-full object-cover"/>
                 {images.length > 1 && (
                     <>
                     <button onClick={previousHandler} className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white backdrop-blur-md p-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl">
@@ -38,7 +38,7 @@ export const PlaceImageGallery = ({ images }) => {
                 <div className="flex gap-3 mt-4 overflow-x-auto pb-2">
                     {images.map((image, index) => (
                         <button key={index} onClick={() => setCurrentImageIndex(index)} className={`shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 ${index === currentImageIndex? "border-primary": "border-transparent hover:border-primary/50" }`}>
-                            <img src={image || "/placeholder.svg"} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                            <img src={image} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
                         </button>
                     ))}
                 </div>

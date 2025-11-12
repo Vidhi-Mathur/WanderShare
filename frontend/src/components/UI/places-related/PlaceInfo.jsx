@@ -1,13 +1,10 @@
 import { Heart, MapPin, Calendar } from "lucide-react"
+import { useContext } from "react"
+import { AuthContext } from "../../../utils/authContext"
+import { formatDate } from "../../../utils/formatDate"
 
 export const PlaceInfo = ({ place, likeCount, isLiked, onLike }) => {
-    const formatDate = (dateString) => (
-        new Date(dateString).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-        })
-    )
+    const { token } = useContext(AuthContext)
 
     return (
         <div className="glass-card rounded-2xl p-8 backdrop-blur-xl">
@@ -19,9 +16,11 @@ export const PlaceInfo = ({ place, likeCount, isLiked, onLike }) => {
                         <span className="font-poppins text-lg">{place.location.address}</span>
                     </div>
                 </div>
-                <button onClick={onLike} className="shrink-0 bg-white/90 hover:bg-white backdrop-blur-md p-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl">
+                {token && (
+                    <button onClick={onLike} className="shrink-0 bg-white/90 hover:bg-white backdrop-blur-md p-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl">
                     <Heart size={24} className={`transition-all duration-300 ${isLiked ? "fill-red-500 text-red-500" : "text-gray-700"}`}/>
-                </button>
+                    </button>
+                )}
             </div>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">{place.description}</p>
             <div className="flex items-center justify-between pt-6 border-t border-border">

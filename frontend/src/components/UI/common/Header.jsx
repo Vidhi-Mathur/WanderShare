@@ -1,8 +1,8 @@
 import { useContext, useState } from "react"
-import { Compass, Hamburger, HamburgerIcon, MenuIcon } from "lucide-react"
+import { Compass, MenuIcon } from "lucide-react"
 import { Link } from "react-router-dom"
-import { AuthContext } from "../../../store/Auth-Context"
 import { DropDownMenu } from "./DropDownMenu"
+import { AuthContext } from "../../../utils/authContext"
 
 const headerLinks = [
     { title: "Featured", targetId: "gallery" },

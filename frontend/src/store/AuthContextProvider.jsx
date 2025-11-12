@@ -1,18 +1,9 @@
-import { createContext, useState, useEffect } from "react"
-
-export const AuthContext = createContext({
-    loading: false,
-    login: () => {},
-    signup: () => {},
-    logout: () => {},
-    token: null,
-    setToken: () => {},
-    details: () => {}
-})
+import { useState, useEffect } from "react"
+import { AuthContext } from "../utils/authContext"
 
 export const AuthCtxProvider = ({ children }) => {
     const [token, setToken] = useState(null)
-    const [details, setDetails] = useState({ name: "", email: "" })
+    const [details, setDetails] = useState({ id: "", name: "", email: "" })
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
@@ -26,19 +17,22 @@ export const AuthCtxProvider = ({ children }) => {
         setLoading(false)
     }, [])
 
-    const login = (newToken, name, email) => {
-        setToken(newToken)
-        setDetails({ name, email })
-        localStorage.setItem("authToken", newToken)
-        localStorage.setItem("userDetails", JSON.stringify({ name, email }))
-    }
+    const login = (newToken, user) => {
+    const userDetails = { id: user._id, name: user.name, email: user.email }
+    setToken(newToken)
+    setDetails(userDetails)
+    localStorage.setItem("authToken", newToken)
+    localStorage.setItem("userDetails", JSON.stringify(userDetails))
+}
 
-    const signup = (newToken, name, email) => {
-        setToken(newToken)
-        setDetails({ name, email })
-        localStorage.setItem("authToken", newToken)
-        localStorage.setItem("userDetails", JSON.stringify({ name, email }))
-    }
+const signup = (newToken, user) => {
+    const userDetails = { id: user._id, name: user.name, email: user.email }
+    setToken(newToken)
+    setDetails(userDetails)
+    localStorage.setItem("authToken", newToken)
+    localStorage.setItem("userDetails", JSON.stringify(userDetails))
+}
+
 
     const logout = async() => {
         try {

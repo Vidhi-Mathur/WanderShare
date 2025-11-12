@@ -1,7 +1,7 @@
 import { ArrowRight, Sparkles, Zap } from "lucide-react"
 import { useContext } from "react"
 import { Link } from "react-router-dom"
-import { AuthContext } from "../../../store/Auth-Context"
+import { AuthContext } from "../../../utils/authContext"
 
 export const JoinNowSection = () =>{
     const { token } = useContext(AuthContext)

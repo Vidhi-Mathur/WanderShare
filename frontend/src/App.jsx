@@ -8,6 +8,7 @@ import { ProtectedRoutes } from "./components/UI/user-related/ProtectedRoutes";
 import { AccessDeniedPage } from "./components/Pages/AccessDeniedPage";
 import { DisplayPlacesPage } from "./components/Pages/DisplayPlacesPage";
 import { PlaceDetailedPage }from "./components/Pages/PlaceDetailedPage";
+import { UserProfilePage } from "./components/Pages/UserProfilePage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
                 <Route element={<ProtectedRoutes />} >
                     <Route path="/add-place" element={<AddPlacePage />} />
                 </Route>
+                <Route path="/user/:userId" element={<UserProfilePage />} />
                 <Route path="/access-denied" element={<AccessDeniedPage />} />
           </Route>
       </Routes>

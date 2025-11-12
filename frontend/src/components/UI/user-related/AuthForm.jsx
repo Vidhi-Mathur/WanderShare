@@ -1,7 +1,7 @@
 import { useContext, useState } from "react"
-import { AuthContext } from "../../../store/Auth-Context"
 import { useNavigate } from "react-router-dom"
 import { Loader2 } from "lucide-react"
+import { AuthContext } from "../../../utils/authContext"
 
 export const AuthForm = ({ signupMode }) => {
     const { signup, login, token, setToken } = useContext(AuthContext)
@@ -42,7 +42,7 @@ export const AuthForm = ({ signupMode }) => {
             if(!response.ok){
                 throw new Error(result.message)
             }
-            signupMode? signup(result.token, result.name, result.email): login(result.token, result.name, formData.email)
+            signupMode? signup(result.token, result.user): login(result.token, result.user)
             setToken(result.token)
             navigate('/')
             return result
@@ -67,7 +67,7 @@ export const AuthForm = ({ signupMode }) => {
                     </p>
                 </div>
                 {error && (
-                    <div className="mb-5 p-3 rounded-lg bg-[#dc2626] text-white text-center">
+                    <div className="mb-5 p-3 rounded-lg bg-destructive text-destructive-foreground text-center">
                         {error}
                     </div>
                 )}

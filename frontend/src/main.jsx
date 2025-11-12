@@ -4,7 +4,7 @@ import './globals.css'
 import App from './App.jsx'
 import "leaflet/dist/leaflet.css";
 import "leaflet-geosearch/dist/geosearch.css";
-import { AuthCtxProvider } from './store/Auth-Context.jsx';
+import { AuthCtxProvider } from './store/AuthContextProvider.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -1,7 +1,7 @@
 import { useState, useContext } from "react"
 import { ChevronDown, User, LogOut } from "lucide-react"
-import { AuthContext } from "../../../store/Auth-Context"
 import { Link } from "react-router-dom"
+import { AuthContext } from "../../../utils/authContext"
 
 export const DropDownMenu = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -26,7 +26,7 @@ export const DropDownMenu = () => {
                         <p className="text-xs text-muted-foreground font-poppins">Account</p>
                     </div>
                     <div className="p-2 space-y-1">
-                        <Link to="/profile" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-primary/10 transition-all duration-300 font-poppins font-medium group">
+                        <Link to={`/user/${details.id}`} className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-primary/10 transition-all duration-300 font-poppins font-medium group">
                             <User className="w-4 h-4 text-accent group-hover:scale-110 transition-transform" />
                             Profile
                         </Link>

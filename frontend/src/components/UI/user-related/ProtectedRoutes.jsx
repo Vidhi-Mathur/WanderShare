@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { AuthContext } from "../../../store/Auth-Context";
 import { Loader2 } from "lucide-react";
+import { AuthContext } from "../../../utils/authContext";
 
 export const ProtectedRoutes = () => {
     const { token, loading } = useContext(AuthContext)

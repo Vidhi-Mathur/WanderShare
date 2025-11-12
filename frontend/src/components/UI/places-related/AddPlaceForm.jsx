@@ -1,8 +1,8 @@
 import { useContext, useState } from "react"
 import { Upload, MapPin, X, Loader2, CheckCircle2, AlertCircle } from "lucide-react"
 import { LocationPicker } from "./LocationPicker"
-import { AuthContext } from "../../../store/Auth-Context"
 import { uploadImageHandler } from "../../../services/ImageService"
+import { AuthContext } from "../../../utils/authContext"
 
 const requirementConstants = [
     "Clear, descriptive name that identifies the location",
@@ -117,7 +117,7 @@ export const AddPlaceForm = () => {
     return (
         <form onSubmit={submitHandler} className="space-y-8 relative">
             {error && (
-                <div className="p-4 rounded-lg bg-[#dc2626] text-white flex items-center gap-2">
+                <div className="p-4 rounded-lg bg-destructive text-destructive-foreground flex items-center gap-2">
                     <AlertCircle className="w-5 h-5" />
                     {error}
                 </div>
