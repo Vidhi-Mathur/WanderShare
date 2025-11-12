@@ -28,7 +28,7 @@ export const postSignup = async(req, res, next) => {
         //Generating token
         let token = generateToken({ _id: newUser._id })
         await newUser.save()
-        res.status(200).json({ token, name, email })
+        res.status(200).json({ token, user: existingUser })
     }
     catch(err) {
         next(err)
@@ -51,7 +51,7 @@ export const postLogin = async(req, res, next) => {
         //Generating token
         let token = generateToken({ _id: existingUser._id })
         await existingUser.save()
-        res.status(200).json({ token, name: existingUser.name })
+        res.status(200).json({ token, user: existingUser })
     }
     catch(err){
         next(err)
@@ -66,6 +66,37 @@ export const postLogout = async (req, res, next) => {
     }
 };
 
+export const getUserProfile = async (req, res) => {
+  try {
+    const { userId } = req.params
+    const existingUser = await User.findById(userId).populate({
+        path: "places",
+        select: "name images location description likes createdAt reviews",
+        populate: {
+            path: "reviews",
+            select: "rating comment reviewer",
+        }}).populate({
+        path: "likedPlaces",
+        select: "name images location description likes reviews",
+        populate: {
+            path: "reviews",
+            select: "rating comment reviewer",
+        }}).populate({
+        path: "reviews",
+        populate: {
+            path: "place",
+            select: "name location",
+    }})
+    if(!existingUser){
+        return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ user: existingUser });
+    } 
+    catch(err){
+        console.log(err)
+        res.status(500).json({ message: "Failed to fetch user profile" });
+    }
+};
 
 export const authorizationMiddleware = async(req, res, next) => {
     try {
