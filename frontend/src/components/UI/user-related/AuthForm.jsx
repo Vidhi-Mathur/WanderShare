@@ -12,7 +12,7 @@ export const AuthForm = ({ signupMode }) => {
         name: ""
     })
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(null)
+    const [errors, setErrors] = useState([])
 
     const changeHandler = (e) => {
         const { name, value } = e.target
@@ -25,7 +25,7 @@ export const AuthForm = ({ signupMode }) => {
     const submitHandler = async (e) => {
         e.preventDefault();
         setLoading(true)
-        setError(null)
+        setErrors([])
         const form = new FormData(e.target)
         const data = Object.fromEntries(form.entries())
         try {
@@ -40,7 +40,8 @@ export const AuthForm = ({ signupMode }) => {
             })
             const result = await response.json()
             if(!response.ok){
-                throw new Error(result.message)
+                const errors = result.errors? result.errors.map(err => err.msg): [result.message];
+                throw { errors }
             }
             signupMode? signup(result.token, result.user): login(result.token, result.user)
             setToken(result.token)
@@ -48,7 +49,8 @@ export const AuthForm = ({ signupMode }) => {
             return result
         }
         catch(err){
-            setError(err.message || "Can't authenticate, try again later")
+            if(err.errors) setErrors(err.errors);     
+            else setErrors([err.message || "Can't authenticate, try again later..."]);
         }
         finally {
             setLoading(false)
@@ -66,9 +68,13 @@ export const AuthForm = ({ signupMode }) => {
                         {signupMode ? "Start sharing your travel stories today" : "Access your wandering journey"}
                     </p>
                 </div>
-                {error && (
-                    <div className="mb-5 p-3 rounded-lg bg-destructive text-destructive-foreground text-center">
-                        {error}
+                {errors && errors.length > 0 && (
+                    <div className="mb-5 p-3 rounded-lg bg-destructive text-destructive-foreground text-left">
+                        <ul className="list-disc pl-5 space-y-1">
+                            {errors.map((e, i) => (
+                                <li key={i}>{e}</li>
+                            ))}
+                        </ul>
                     </div>
                 )}
                 <form onSubmit={submitHandler} className="space-y-5">

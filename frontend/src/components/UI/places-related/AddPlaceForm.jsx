@@ -13,7 +13,6 @@ const requirementConstants = [
 
 export const AddPlaceForm = () => {
     const { token } = useContext(AuthContext)
-    console.log(token)
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -21,7 +20,7 @@ export const AddPlaceForm = () => {
         location: { address: "", latitude: null, longitude: null }
     })
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(null)
+    const [errors, setErrors] = useState([])
     const [success, setSuccess] = useState(false)
     const [showLocationPicker, setShowLocationPicker] = useState(false)
 
@@ -60,7 +59,7 @@ export const AddPlaceForm = () => {
     const submitHandler = async(e) => {
         e.preventDefault()
         setLoading(true)
-        setError(null)
+        setErrors([])
         setSuccess(false)
         try {
             const imageUrls = await uploadImageHandler(formData.images, "wandershare_places", token)
@@ -76,8 +75,9 @@ export const AddPlaceForm = () => {
                 })
             })
             const result = await response.json()
-            if (!response.ok){
-                throw new Error(result.message)
+            if(!response.ok){
+                const errors = result.errors? result.errors.map(err => err.msg): [result.message];
+                throw { errors }
             }
             setSuccess(true)
             setFormData({
@@ -88,8 +88,9 @@ export const AddPlaceForm = () => {
             })
         } 
         catch(err){
-            setError(err.message || "Failed to add place, try again later.")
-        } 
+            if(err.errors) setErrors(err.errors);     
+            else setErrors([err.message || "Can't authenticate, try again later..."]);
+        }
         finally{
             setLoading(false)
         }
@@ -116,12 +117,6 @@ export const AddPlaceForm = () => {
 
     return (
         <form onSubmit={submitHandler} className="space-y-8 relative">
-            {error && (
-                <div className="p-4 rounded-lg bg-destructive text-destructive-foreground flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5" />
-                    {error}
-                </div>
-            )}
             <div className="glass-card rounded-xl p-6 backdrop-blur-xl border border-white/50">
                 <h3 className="font-poppins font-bold text-green-900 mb-3">What We're Looking For</h3>
                 <ul className="space-y-2 text-sm text-gray-700">
@@ -205,6 +200,15 @@ export const AddPlaceForm = () => {
                                 <LocationPicker onLocationSelect={locationSelectHandler} />
                             </div>
                         </div>
+                    </div>
+                )}
+                {errors && errors.length > 0 && (
+                    <div className="mb-5 p-3 rounded-lg bg-destructive text-destructive-foreground text-left">
+                        <ul className="list-disc pl-5 space-y-1">
+                            {errors.map((e, i) => (
+                                <li key={i}>{e}</li>
+                            ))}
+                        </ul>
                     </div>
                 )}
                 <button type="submit" disabled={loading ||!formData.name ||!formData.description ||formData.images.length === 0 ||!formData.location.latitude ||!formData.location.longitude ||!formData.location.address} className="w-full py-4 px-6 bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-poppins font-bold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-emerald-600/30 flex items-center justify-center gap-2">

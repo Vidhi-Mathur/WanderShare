@@ -7,7 +7,6 @@ import { formatDate } from "../../../utils/formatDate"
 import { AuthContext } from "../../../utils/authContext"
 
 export const PlaceCard = ({ place }) => {
-    console.log(place)
     const { token, details } = useContext(AuthContext)
     const [isLiked, setIsLiked] = useState(false)
     const [likeCount, setLikeCount] = useState(place?.likes?.length || 0)

@@ -10,7 +10,7 @@ export const PlaceReview = ({ reviews, placeId }) => {
         rating: 0,
         comment: ""
     })
-    const [error, setError] = useState(null)
+    const [errors, setErrors] = useState([])
     const [loading, setLoading] = useState(false)
 
     const submitHandler = async() => {
@@ -26,12 +26,16 @@ export const PlaceReview = ({ reviews, placeId }) => {
             })
             const result = await response.json()
             if(!response.ok){
-                throw new Error(result.message)
+                const errors = result.errors? result.errors.map(err => err.msg): [result.message];
+                throw { errors }
             }
             return result
         }
         catch(err){
-            setError(err.message || "Failed to post review, try again later.")
+            if(err.errors) setErrors(err.errors);     
+            else setErrors([err.message || "Failed to post review, try again later..."]);
+            
+            
         }
         finally{
             setLoading(false)
@@ -70,12 +74,20 @@ export const PlaceReview = ({ reviews, placeId }) => {
                             </div>
                         </div>
                         <div className="flex gap-3">
-                            <textarea value={review.comment} onChange={(e) => setReview((prev) => ({ ...prev, comment: e.target.value }))} placeholder="Share your thoughts about this place..." className="flex-1 bg-background/50 border border-border rounded-lg px-4 py-3 font-poppins text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary transition-colors duration-300 resize-none" rows={3} />
-                            <button onClick={submitHandler} disabled={loading || !review.comment.trim() || review.rating === 0} className="bg-primary hover:bg-primary/90 disabled:bg-primary/50 text-white p-3 rounded-lg transition-colors duration-300">
+                            <textarea value={review.comment} onChange={(e) => setReview((prev) => ({ ...prev, comment: e.target.value }))} placeholder="Share your thoughts about this place..." className="flex-1 bg-background/50 border border-border rounded-lg px-4 py-3 font-poppins text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary transition-colors duration-300 resize-none" rows={3} required/>
+                            <button onClick={submitHandler} disabled={loading || !review.comment.trim()} className="bg-primary hover:bg-primary/90 disabled:bg-primary/50 text-white p-3 rounded-lg transition-colors duration-300">
                                 {loading ? "..." : <Send size={20} />}
                             </button>
                         </div>
-                        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+                        {errors && errors.length > 0 && (
+                            <div className="mb-5 p-3 rounded-lg bg-destructive text-destructive-foreground text-left">
+                                <ul className="list-disc pl-5 space-y-1">
+                                    {errors.map((e, i) => (
+                                        <li key={i}>{e}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                     </div>
                     </>
                 ): (
