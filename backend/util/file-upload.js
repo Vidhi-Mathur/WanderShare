@@ -37,7 +37,6 @@ export const fileUpload = async (req, res) => {
         return res.status(200).json({ imageUrls });
     } 
     catch (err) {
-        console.log(err)
         req.files.forEach(file => {
             if(fs.existsSync(file.path)) fs.unlinkSync(file.path);
         });

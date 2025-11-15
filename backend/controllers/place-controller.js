@@ -137,18 +137,6 @@ export const getPlaceByPlaceId = async(req, res, next) => {
     }
 };
 
-// export const deletePlaceByPlaceId = async(req, res, next) => {
-//     try {
-//         const { placeId } = req.params
-//         const deletedPlace = await Place.findByIdAndDelete(placeId)
-//         if(!deletedPlace) return res.status(404).json({ message: "No associated place found." })
-//         res.status(200).json({ message: "Place deleted successfully." })
-//     }
-//     catch(err){
-//         next(err)
-//     }
-// }
-
 export const likeUnlikePlace = async (req, res) => {
   try {
         const userId = req.user._id; 
@@ -183,14 +171,3 @@ export const likeUnlikePlace = async (req, res) => {
         next(err)
     }
 };
-
-// export const getPlacesByUserId = async(req, res, next) => {
-//     try {
-//         const { userId } = req.params.user
-//         const places = await Place.find({ creator: userId })
-//         res.status(200).json({ places })
-//     }
-//     catch(err){
-//         next(err)
-//     }
-// }

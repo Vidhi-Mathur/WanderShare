@@ -19,7 +19,8 @@ const review = new schema({
         max: 5
     },
     comment: {
-        type: String
+        type: String,
+        required: true
     }
 }, { timestamps: true })
 

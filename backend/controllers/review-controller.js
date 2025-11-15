@@ -7,9 +7,6 @@ export const createReview = async(req, res, next) => {
     const { placeId } = req.params
     const userId = req.user._id 
     try {
-        if(!rating || rating < 0 || rating > 5) {
-            return res.status(400).json({ message: "Rating must be between 0 and 5" })
-        }
         const existingPlace = await Place.findById(placeId)
         if(!existingPlace) {
             return res.status(404).json({ message: "Place not found" })
@@ -53,7 +50,6 @@ export const getAllReviewsByPlaceId = async(req, res, next) => {
         return res.status(200).json({ reviews })
     } 
     catch(err){
-        console.error("Error fetching reviews:", error)
         return res.status(500).json({ message: "Failed to fetch reviews" })
     }
 }
