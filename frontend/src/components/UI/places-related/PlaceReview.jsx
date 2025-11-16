@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import { AuthContext } from "../../../utils/authContext"
 import { formatDate } from "../../../utils/formatDate"
 
-export const PlaceReview = ({ reviews, placeId }) => {
+export const PlaceReview = ({ reviews, placeId, onReviewSubmitted }) => {
     const { token } = useContext(AuthContext)
     const [review, setReview] = useState({
         rating: 0,
@@ -15,6 +15,7 @@ export const PlaceReview = ({ reviews, placeId }) => {
 
     const submitHandler = async() => {
         setLoading(true)
+        setErrors([])
         try {
             const response = await fetch(`http://localhost:3000/review/${placeId}`, {
                 method: "POST",
@@ -29,13 +30,14 @@ export const PlaceReview = ({ reviews, placeId }) => {
                 const errors = result.errors? result.errors.map(err => err.msg): [result.message];
                 throw { errors }
             }
+            if(onReviewSubmitted) {
+                setTimeout(() => onReviewSubmitted(), 500)
+            }
             return result
         }
         catch(err){
             if(err.errors) setErrors(err.errors);     
             else setErrors([err.message || "Failed to post review, try again later..."]);
-            
-            
         }
         finally{
             setLoading(false)

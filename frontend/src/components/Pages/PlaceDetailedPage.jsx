@@ -17,26 +17,27 @@ export const PlaceDetailedPage = () => {
     const [likeCount, setLikeCount] = useState(place?.likes.length || 0)
     const [isLiked, setIsLiked] = useState(false)
 
-    useEffect(() => {
+    const fetchPlaceByPlaceId = async() => {
         setLoading(true)
         setError(null)
-        const fetchPlaceByPlaceId = async() => {
-            try {
-                const response = await fetch(`http://localhost:3000/place/${placeId}`)
-                const result = await response.json()
-                if(!response.ok){
-                    throw new Error(result.message)
-                }
-                setPlace(result.place)
-                return result
+        try {
+            const response = await fetch(`http://localhost:3000/place/${placeId}`)
+            const result = await response.json()
+            if(!response.ok){
+                throw new Error(result.message)
             }
-            catch(err){
-                setError(err.message || "Failed to fetch place, try again later.")
-            }
-            finally{
-                setLoading(false)
-            }
+            setPlace(result.place)
+            return result
         }
+        catch(err){
+            setError(err.message || "Failed to fetch place, try again later.")
+        }
+        finally{
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
         fetchPlaceByPlaceId()
     },  [placeId])
 
@@ -133,7 +134,7 @@ export const PlaceDetailedPage = () => {
                             </div>
                         </div>
                         <div className="mt-16">
-                            <PlaceReview reviews={place.reviews} placeId={place._id} />
+                            <PlaceReview reviews={place.reviews} placeId={place._id} onReviewSubmitted={fetchPlaceByPlaceId} />
                         </div>
                     </div>
                 </div>
