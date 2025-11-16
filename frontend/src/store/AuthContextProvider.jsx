@@ -2,12 +2,11 @@ import { useState, useEffect } from "react"
 import { AuthContext } from "../utils/authContext"
 
 export const AuthCtxProvider = ({ children }) => {
-    const [token, setToken] = useState(null)
+    const [token, setToken] = useState(true)
     const [details, setDetails] = useState({ id: "", name: "", email: "" })
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        setLoading(true)
         const savedToken = localStorage.getItem("authToken")
         const savedDetails = localStorage.getItem("userDetails")
         if(savedToken){

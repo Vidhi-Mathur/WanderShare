@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { PlaceCard } from "../UI/places-related/PlaceCard"
 import { useEffect } from "react";
 import { SearchFilterBar } from "../UI/places-related/SearchFilterBar";
-import { Loader2 } from "lucide-react";
+import { Loader2, TriangleAlert } from "lucide-react";
 
 export const DisplayPlacesPage = () => {
     const [places, setPlaces] = useState([])
@@ -58,9 +58,10 @@ export const DisplayPlacesPage = () => {
                 </div>
             </section>
             {error && (
-                <section className="px-4 md:px-8 pb-8">
-                    <div className="max-w-6xl mx-auto">
-                        <div className="p-4 rounded-lg bg-destructive text-destructive-foreground">{error}</div>
+                <section className="flex flex-col items-center justify-center px-4 space-y-2 mb-4">
+                    <TriangleAlert className="w-24 h-24 text-red-600" />
+                    <div className="max-w-md w-full p-4 rounded-lg bg-red-600 text-white text-center font-medium shadow-md">
+                        {error}
                     </div>
                 </section>
             )}

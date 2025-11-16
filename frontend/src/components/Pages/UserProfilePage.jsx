@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Loader2, MapPin, Heart, MessageCircle, Star, TriangleAlert } from "lucide-react"
 import { PlaceCard } from "../UI/places-related/PlaceCard"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { AuthContext } from "../../utils/authContext"
 
 export const UserProfilePage = () => {
@@ -139,8 +139,8 @@ export const UserProfilePage = () => {
                             <h2 className="text-2xl font-bold mb-6 text-card-foreground">My Reviews</h2>
                             {user.reviews?.length? (
                                 <div className="space-y-4">
-                                    {user.reviews.map((review, idx) => (
-                                        <div key={idx} className="p-6 rounded-2xl bg-card border border-border">
+                                    {user.reviews.map((review) => (
+                                        <Link to={`/place/${review.place._id}`} key={review.place._id} className="block p-6 rounded-2xl bg-card border border-border hover:bg-muted transition-colors duration-300">
                                             <div className="flex items-start justify-between mb-3">
                                                 <div>
                                                     <p className="font-semibold text-card-foreground">{review.place?.name}</p>
@@ -150,12 +150,12 @@ export const UserProfilePage = () => {
                                                 </div>
                                                 <div className="flex gap-1">
                                                     {[...Array(5)].map((_, i) => (
-                                                        <Star key={i} size={16} className={`${i < review.rating? "fill-yellow-400 text-yellow-400": "text-gray-300" }`}/>
+                                                        <Star key={i} size={16} className={i < review.rating? "fill-yellow-400 text-yellow-400": "text-gray-300"}/>
                                                     ))}
                                                 </div>
                                             </div>
                                             <p className="text-card-foreground">{review.comment}</p>
-                                        </div>
+                                        </Link>
                                     ))}
                                 </div>
                             ): (

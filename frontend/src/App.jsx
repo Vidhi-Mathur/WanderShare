@@ -9,6 +9,7 @@ import { AccessDeniedPage } from "./components/Pages/AccessDeniedPage";
 import { DisplayPlacesPage } from "./components/Pages/DisplayPlacesPage";
 import { PlaceDetailedPage }from "./components/Pages/PlaceDetailedPage";
 import { UserProfilePage } from "./components/Pages/UserProfilePage";
+import { NotFoundPage } from "./components/Pages/NotFoundPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
                 </Route>
                 <Route path="/user/:userId" element={<UserProfilePage />} />
                 <Route path="/access-denied" element={<AccessDeniedPage />} />
+                <Route path="*" element={<NotFoundPage />}/>
           </Route>
       </Routes>
     </Router>

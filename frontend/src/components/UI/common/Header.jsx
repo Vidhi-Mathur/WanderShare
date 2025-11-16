@@ -41,6 +41,10 @@ export const Header = () => {
                         <span className="absolute bottom-0 left-0 w-0 h-1 bg-linear-to-r from-accent to-primary group-hover:w-full transition-all duration-300 rounded-full" />
                         </button>
                     ))}
+                    <Link to="/places" className="text-sm text-muted-foreground hover:text-accent transition-all duration-300 relative group font-poppins font-medium">
+                        Explore
+                        <span className="absolute bottom-0 left-0 w-0 h-1 bg-linear-to-r from-accent to-primary group-hover:w-full transition-all duration-300 rounded-full" />
+                    </Link>
                 </div>
                 <div className="flex items-center gap-3">
                     {token? (
@@ -65,6 +69,9 @@ export const Header = () => {
                         {headerLink.title}
                         </button>
                     ))}
+                    <Link to="/places" onClick={() => setMobileMenuOpen(false)} className="block text-sm text-muted-foreground hover:text-accent py-2 transition-all duration-300 font-poppins font-medium">
+                        Explore
+                    </Link>
                 </div>
             )}
         </header>
