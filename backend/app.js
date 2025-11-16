@@ -15,20 +15,18 @@ app.use(cors({
     origin: 'http://localhost:5173'
 }))
 
+//Forwarding
+app.post('/upload-image', authorizationMiddleware, upload.array('images', 6), fileUpload);
+
 //Parsing JSON bodies
 app.use(express.json({limit: '50mb'}))
 
 //Parsing URL-encoded bodies
 app.use(express.urlencoded({extended: true, limit: '50mb'}))
 
-//Forwarding
-app.post('/upload-image', authorizationMiddleware, upload.array('images', 10), fileUpload);
 app.use('/user', userRoutes)
 app.use('/place', placeRoutes)
 app.use('/review', reviewRoutes)
-
-//Serving statically
-app.use('/uploads/images', express.static('uploads/images'))
 
 //Error Handling
 app.use((err, req, res, next) => {
