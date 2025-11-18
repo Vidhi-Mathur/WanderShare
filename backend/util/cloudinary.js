@@ -10,6 +10,7 @@ cloudinary.config({
 });
 
 export const cloudinaryUpload = async(buffer, folder) => {
+    //Promise created as Cloudinary uses a callback API.
     return new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream({
             resource_type: "image",
@@ -19,6 +20,7 @@ export const cloudinaryUpload = async(buffer, folder) => {
             if(err) reject(err)
             else resolve(result.secure_url)
         })
+        //Received buffer from multer while Cloudinary expects stream, so convert to buffer -> stream
         const stream = new PassThrough();
         stream.end(buffer);
         stream.pipe(uploadStream);

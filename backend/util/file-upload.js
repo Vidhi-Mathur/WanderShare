@@ -7,7 +7,8 @@ const fileType = (req, file, cb) => {
     if(allowed.includes(file.mimetype)) cb(null, true)
     else cb(null, false)
 }
-
+//Save as buffer to RAM, rather than disk
+//Export as multer middleware to be used in route to parse uploaded images
 export const upload = multer({storage: multer.memoryStorage(), fileFilter: fileType})
 
 export const fileUpload = async(req, res, next) => {
@@ -16,6 +17,7 @@ export const fileUpload = async(req, res, next) => {
             return res.status(400).json({ message: 'No files uploaded' });
         }
         const folder = req.body.folder || 'default-folder'; 
+        //Returns a promise, later resolved to get image urls
         const uploadPromises = req.files.map(file => cloudinaryUpload(file.buffer, folder));
         const imageUrls = await Promise.all(uploadPromises);
         return res.status(200).json({ imageUrls });

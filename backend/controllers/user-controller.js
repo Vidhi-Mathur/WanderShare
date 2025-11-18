@@ -70,6 +70,8 @@ export const getUserProfile = async (req, res) => {
   try {
     const { userId } = req.params
     const existingUser = await User.findById(userId).populate({
+        //3 populate(), as User has 3 relational fields, places[], likedPlaces[] and reviews[]
+        //User.places[] has placeIDs, replace with full Place objects, same for User.likedPlaces[] and User.reviews[] so could contain rating, comment etc
         path: "places",
         select: "name images location description likes createdAt reviews",
         populate: {
@@ -86,7 +88,8 @@ export const getUserProfile = async (req, res) => {
         populate: {
             path: "place",
             select: "name location",
-    }})
+        }
+    })
     if(!existingUser){
         return res.status(404).json({ message: "User not found" });
     }
@@ -116,6 +119,7 @@ export const authorizationMiddleware = async(req, res, next) => {
             }
             return res.status(401).json({ message: 'Invalid token' })
         }
+        //Attaching authenticated user’s identity, can extract userId from it without needing the token again (now we know user is verified, so no need of token till expiration)
         req.user = decodedToken
         next()
     }

@@ -12,6 +12,7 @@ import { authorizationMiddleware } from './controllers/user-controller.js'
 const app = express()
 
 app.use(cors({
+    //Others can't access our API endpoints
     origin: 'http://localhost:5173'
 }))
 

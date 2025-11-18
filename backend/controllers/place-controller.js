@@ -32,9 +32,11 @@ export const createPlace = async(req, res, next) => {
 
 export const getAllPlaces = async(req, res, next) => {
     try {
+        //Extract query parameters from URL
         const { search, sortBy, filterDate, filterRating } = req.query;
         const matchQuery = {};
         if(search){
+            //or to match multiple fields
             matchQuery.$or = [
                 { name: { $regex: search, $options: "i" } },
                 { description: { $regex: search, $options: "i" } },
@@ -61,10 +63,12 @@ export const getAllPlaces = async(req, res, next) => {
                     endDate = new Date(now.getFullYear(), 0, 1);
                     break;
             }
+            //Lies in range
             if(startDate && endDate){
                 matchQuery.createdAt = { $gte: startDate, $lt: endDate };
             }
         }
+        //1: ascending, -1: descending
         let sortOption = { createdAt: -1 };
         switch(sortBy){
             case "oldest":
@@ -84,17 +88,21 @@ export const getAllPlaces = async(req, res, next) => {
                 break;
         }
         const pipeline = [{ $match: matchQuery }, {
+            //Joining with another collection "Review"
             $lookup: {
                 from: "reviews",
+                //In Place, we have Place.reviews[]
                 localField: "reviews",
                 foreignField: "_id",
                 as: "reviewDetails",
             }}, {
+            //Add extra two computed fields, average rating and likes count
             $addFields: {
                 avgRating: { $avg: "$reviewDetails.rating" },
                 likesCount: { $size: "$likes" },
             }}
         ]
+        //Keep only whose places where avgRating >= filterRating
         if(filterRating && filterRating !== "all"){
             pipeline.push({
                 $match: {
@@ -102,7 +110,9 @@ export const getAllPlaces = async(req, res, next) => {
                 },
             });
         }
+        //Sort (done later so if options chose = likes/ rating)
         pipeline.push({ $sort: sortOption });
+        //Aggregate and return computed places
         const places = await Place.aggregate(pipeline);
         res.status(200).json({ places });
     } 
@@ -117,9 +127,12 @@ export const getPlaceByPlaceId = async(req, res, next) => {
     try {
         const { placeId } = req.params
         const existingPlace = await Place.findById(placeId).populate({ 
+            //Place.creator = User, get name from it
             path: "creator", 
             select: "name"
         }).populate({
+            //Place.review = Review, select rating, comment, createdAt and reviewer from it.
+            //Review.reviewer = User, select name from it
             path: "reviews",
             select: "rating comment createdAt reviewer",
             populate: {
