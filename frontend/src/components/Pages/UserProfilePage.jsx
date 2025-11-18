@@ -4,6 +4,8 @@ import { PlaceCard } from "../UI/places-related/PlaceCard"
 import { Link, useParams } from "react-router-dom"
 import { AuthContext } from "../../utils/authContext"
 
+const tabConstants = ["places", "liked", "reviews"]
+
 export const UserProfilePage = () => {
     const { token, details } = useContext(AuthContext)
     const params = useParams()
@@ -91,7 +93,7 @@ export const UserProfilePage = () => {
                     </div>
                     <div className="mb-8">
                         <div className="flex gap-4 border-b border-border">
-                            {["places", "liked", "reviews"].map((tab) => (
+                            {tabConstants.map((tab) => (
                                 <button key={tab} onClick={() => setActiveTab(tab)} className={`px-4 py-3 font-medium capitalize transition-colors border-b-2 -mb-px ${activeTab === tab ? "border-primary text-primary" : "border-transparent text-muted-foreground"}`}>
                                     {tab === "places" && "My Places"}
                                     {tab === "liked" && "Liked Places"}
