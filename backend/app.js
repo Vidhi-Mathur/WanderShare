@@ -13,7 +13,7 @@ const app = express()
 
 app.use(cors({
     //Others can't access our API endpoints
-    origin: 'http://localhost:5173'
+    origin: process.env.CLIENT_URL
 }))
 
 //Forwarding
