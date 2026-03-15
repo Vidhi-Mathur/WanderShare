@@ -22,7 +22,6 @@ export const UserProfilePage = () => {
             try {
                 const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/user/${userId}`)
                 const result = await response.json()
-                console.log(result)
                 if(!response.ok) {
                     throw new Error(result.message)
               }

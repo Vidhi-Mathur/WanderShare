@@ -24,7 +24,7 @@ export const DisplayPlacesPage = () => {
             params.append("sortBy", queryParams.sortBy)
             params.append("filterDate", queryParams.filterDate)
             params.append("filterRating", queryParams.filterRating)
-            const response = await fetch(`http://localhost:3000/place?${params.toString()}`)
+            const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/place?${params.toString()}`)
             const result = await response.json()
             if(!response.ok){
                 throw new Error(result.message)
