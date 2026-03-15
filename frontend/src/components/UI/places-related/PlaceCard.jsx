@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react"
-import { Heart, MapPin, Calendar, MessageCircle, TriangleAlert } from "lucide-react"
+import { Heart, MapPin, Calendar, MessageCircle, TriangleAlert, Trash2, Pencil, Loader2 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { toggleLikePlace } from "../../../services/LikeService"
 import { useContext } from "react"
 import { formatDate } from "../../../utils/formatDate"
 import { AuthContext } from "../../../utils/authContext"
+import { deletePlaceHandler } from "../../../services/PlaceService"
 
-export const PlaceCard = ({ place }) => {
+export const PlaceCard = ({ place, isCreator, onDelete }) => {
     const { token, details } = useContext(AuthContext)
     const [isLiked, setIsLiked] = useState(false)
     const [likeCount, setLikeCount] = useState(place?.likes?.length || 0)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+
+    isCreator = isCreator || (details?.id === place?.creator)
 
     const likeToggler = async(e) => {
         e.preventDefault()
@@ -20,6 +23,26 @@ export const PlaceCard = ({ place }) => {
             const result = await toggleLikePlace(place._id, token)
             setIsLiked(result.liked ?? !isLiked)
             setLikeCount(result.likesCount ?? (isLiked ? likeCount - 1 : likeCount + 1))
+        } 
+        catch(err){
+          setError(err.message)
+        } 
+        finally {
+          setLoading(false)
+        }
+    }
+
+    const deletePlace = async(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        const confirmDelete = window.confirm("Delete this place?")
+        if(!confirmDelete) return
+        setLoading(true)
+        try {
+            await deletePlaceHandler(place._id, token)
+            if(onDelete){
+                onDelete(place._id)
+            }
         } 
         catch(err){
           setError(err.message)
@@ -87,6 +110,17 @@ export const PlaceCard = ({ place }) => {
                                 <span>{formatDate(place?.createdAt)}</span>
                             </div>
                         </div>
+                        {isCreator && (
+                            <div className="flex gap-2 pt-8">
+                                <Link to={`/edit-place/${place._id}`} className="flex items-center gap-1 text-sm bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                    <Pencil size={16}/> Edit
+                                </Link>                    
+                                <button className="flex items-center gap-1 text-sm bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700" onClick={deletePlace} disabled={loading}>
+                                    {loading ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
+                                    {loading ? "Deleting..." : "Delete"}
+                                </button>                    
+                            </div>
+                        )}                  
                     </div>  
                 </div>
             </div>

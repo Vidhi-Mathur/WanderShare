@@ -87,7 +87,7 @@ export const DisplayPlacesPage = () => {
                     <div className="max-w-6xl mx-auto">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {places.map((place) => (
-                                <PlaceCard key={place._id} place={place} />
+                                <PlaceCard key={place._id} place={place} onDelete={(id) => setPlaces((prev) => prev.filter((p) => p._id !== id))} />
                             ))}
                         </div>
                     </div>

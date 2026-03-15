@@ -11,13 +11,17 @@ const requirementConstants = [
     "Accurate GPS coordinates for the location"
 ]
 
-export const AddPlaceForm = () => {
+export const PlaceForm = ({ mode = "create", initialData = null }) => {
     const { token } = useContext(AuthContext)
     const [formData, setFormData] = useState({
-        name: "",
-        description: "",
-        images: [],
-        location: { address: "", latitude: null, longitude: null }
+        name: initialData?.name || "",
+        description: initialData?.description || "",
+        images: initialData?.images || [],
+        location:  { 
+            address: initialData?.location?.address || "", 
+            latitude: initialData?.location?.lat || null, 
+            longitude: initialData?.location?.long || null 
+        }
     })
     const [loading, setLoading] = useState(false)
     const [errors, setErrors] = useState([])
@@ -62,9 +66,20 @@ export const AddPlaceForm = () => {
         setErrors([])
         setSuccess(false)
         try {
-            const imageUrls = await uploadImageHandler(formData.images, "wandershare_places", token)
-            const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/place`, {
-                method: "POST",
+            let imageUrls = []
+            if(mode === "create"){
+                imageUrls = await uploadImageHandler(formData.images, "wandershare_places", token)
+            }
+            else {
+                const newImages = formData.images.filter(img => typeof img !== "string")
+                const uploaded = newImages.length? await uploadImageHandler(newImages, "wandershare_places", token): []
+                const existing = formData.images.filter(img => typeof img === "string")
+                imageUrls = [...existing, ...uploaded]
+            }
+            const url = mode === "create"? `${import.meta.env.VITE_SERVER_URL}/place`: `${import.meta.env.VITE_SERVER_URL}/place/${initialData._id}`
+            const method = mode === "create"? "POST": "PUT"
+            const response = await fetch(url, {
+                method: method,
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: token ? `Bearer ${token}` : "",
@@ -103,7 +118,7 @@ export const AddPlaceForm = () => {
                     <CheckCircle2 className="w-16 h-16 text-green-600 animate-bounce" />
                 </div>
                 <h2 className="font-playfair text-3xl font-bold text-green-900 mb-2">
-                    Place Added Successfully!
+                    Place {mode === "create" ? "Added" : "Updated"} Successfully!
                 </h2>
                 <p className="text-gray-600">
                     Your destination will be reviewed and appear on WanderShare shortly.
@@ -149,7 +164,7 @@ export const AddPlaceForm = () => {
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
                             {formData.images.map((preview, index) => (
                                 <div key={index} className="relative group rounded-lg overflow-hidden">
-                                    <img src={URL.createObjectURL(preview)} alt={`Preview ${index + 1}`} className="w-full h-24 object-cover rounded-lg" />
+                                    <img src={typeof preview === "string"? preview: URL.createObjectURL(preview)} alt={`Preview ${index + 1}`} className="w-full h-24 object-cover rounded-lg" />
                                     <button type="button" onClick={() => removeImageHandler(index)} className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center" >
                                         <X className="w-6 h-6 text-white" />
                                     </button>
@@ -215,10 +230,10 @@ export const AddPlaceForm = () => {
                     {loading ? (
                         <>
                             <Loader2 className="w-4 h-4 animate-spin" />
-                            Publishing Place...
+                            {mode === "create"? "Publishing...": "Updating..."} 
                         </>
                     ) : (
-                        "Publish Place"
+                        mode === "create"? "Publish Place": "Update Place"
                     )}
                 </button>
             </div>

@@ -1,4 +1,4 @@
-import { AddPlaceForm } from "../UI/places-related/AddPlaceForm"
+import { PlaceForm } from "../UI/places-related/PlaceForm"
 
 export const AddPlacePage = () => {
   return (
@@ -11,7 +11,7 @@ export const AddPlacePage = () => {
                 </p>
             </div>
             <div className="max-w-4xl mx-auto">
-                <AddPlaceForm />
+                <PlaceForm />
             </div>
         </div>
     </main>

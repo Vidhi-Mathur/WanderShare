@@ -9,6 +9,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET_KEY
 });
 
+const extractPublicId = (url) => {
+    const parts = url.split('/');
+    const fileName = parts.pop();                 
+    const folder = parts[parts.length - 1];     
+    const publicId = fileName.split('.')[0];      
+    return `${folder}/${publicId}`;
+};
+
 export const cloudinaryUpload = async(buffer, folder) => {
     //Promise created as Cloudinary uses a callback API.
     return new Promise((resolve, reject) => {
@@ -25,4 +33,14 @@ export const cloudinaryUpload = async(buffer, folder) => {
         stream.end(buffer);
         stream.pipe(uploadStream);
     })
+}
+
+export const cloudinaryDelete = async(imageUrl) => {
+    try {
+        const publicId = extractPublicId(imageUrl);
+        await cloudinary.uploader.destroy(publicId);
+    } 
+    catch(err){
+      return null
+    }
 }

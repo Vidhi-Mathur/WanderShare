@@ -1,29 +1,44 @@
 import { useContext, useState } from "react"
-import { Star, Send } from "lucide-react"
+import { Star, Send, Trash2, Pencil } from "lucide-react"
 import { Link } from "react-router-dom"
 import { AuthContext } from "../../../utils/authContext"
 import { formatDate } from "../../../utils/formatDate"
 
 export const PlaceReview = ({ reviews, placeId, onReviewSubmitted }) => {
-    const { token } = useContext(AuthContext)
+    const { token, details } = useContext(AuthContext)
+    const [mode, setMode] = useState('create')
     const [review, setReview] = useState({
+        id: null,
         rating: 0,
         comment: ""
     })
     const [errors, setErrors] = useState([])
     const [loading, setLoading] = useState(false)
 
-    const submitHandler = async() => {
+    const prefillReview = (review) => {
+        setMode('edit')
+        setReview({
+            id: review._id,
+            rating: review.rating,
+            comment: review.comment
+        })
+    }
+
+    const submitHandler = async(e) => {
+        e.preventDefault()
         setLoading(true)
         setErrors([])
+        const url = mode === "create"? `http://localhost:3000/review/${placeId}`: `http://localhost:3000/review/${review.id}`
+        const method = mode === "create"? "POST": "PUT"
+        const payload = mode === "create"? { rating: review.rating, comment: review.comment }: review
         try {
-            const response = await fetch(`http://localhost:3000/review/${placeId}`, {
-                method: "POST",
+            const response = await fetch(url, {
+                method,
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(review)    
+                body: JSON.stringify(payload)
             })
             const result = await response.json()
             if(!response.ok){
@@ -31,7 +46,7 @@ export const PlaceReview = ({ reviews, placeId, onReviewSubmitted }) => {
                 throw { errors }
             }
             if(onReviewSubmitted) {
-                setTimeout(() => onReviewSubmitted(), 500)
+                onReviewSubmitted()
             }
             return result
         }
@@ -43,6 +58,34 @@ export const PlaceReview = ({ reviews, placeId, onReviewSubmitted }) => {
             setLoading(false)
         }
     }
+
+    const deleteReviewHandler = async(reviewId) => {
+        const confirmDelete = window.confirm("Delete this review?")
+        if(!confirmDelete) return
+        setLoading(true)
+        setErrors([])
+        try {
+            const response = await fetch(`http://localhost:3000/review/${reviewId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+            })
+            const result = await response.json();
+            if(!response.ok){
+                throw new Error(result.message || "Failed to delete place");
+            }
+            if(onReviewSubmitted) onReviewSubmitted()
+            return result;
+        }
+        catch(err){
+            if(err.errors) setErrors(err.errors);     
+            else setErrors([err.message || "Failed to delete review, try again later..."]);
+        }
+        finally {
+            setLoading(false)
+        }
+    };
 
     const averageRating = reviews.length > 0? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1): 0
 
@@ -114,10 +157,22 @@ export const PlaceReview = ({ reviews, placeId, onReviewSubmitted }) => {
                                         {formatDate(review.createdAt)}
                                     </p>
                                 </div>
-                                <div className="flex gap-1">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star key={i} size={16} className={`${i < review.rating? "fill-yellow-400 text-yellow-400": "text-gray-300" }`}/>
-                                    ))}
+                                <div className="flex flex-col items-end gap-2">
+                                    <div className="flex gap-1">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star key={i} size={16} className={`${i < review.rating? "fill-yellow-400 text-yellow-400": "text-gray-300" }`}/>
+                                        ))}
+                                    </div>
+                                    {(details?.id === review.reviewer?._id) && (
+                                        <div className="flex gap-8">
+                                            <button className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200 cursor-pointer" onClick={() => prefillReview(review)}>
+                                                <Pencil size={14}/> Edit
+                                            </button>                    
+                                            <button className="flex items-center gap-1 text-sm text-red-600 hover:text-red-800 transition-colors duration-200 cursor-pointer" onClick={() => deleteReviewHandler(review._id)}>
+                                                <Trash2 size={14}/> Delete
+                                            </button>                    
+                                        </div>
+                                    )}   
                                 </div>
                             </div>
                             <p className="text-muted-foreground leading-relaxed">{review.comment}</p>

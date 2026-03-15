@@ -1,5 +1,5 @@
 import { useContext, useState } from "react"
-import { Compass, MenuIcon } from "lucide-react"
+import { Compass, Flame, MenuIcon } from "lucide-react"
 import { Link } from "react-router-dom"
 import { DropDownMenu } from "./DropDownMenu"
 import { AuthContext } from "../../../utils/authContext"
@@ -45,6 +45,10 @@ export const Header = () => {
                         Explore
                         <span className="absolute bottom-0 left-0 w-0 h-1 bg-linear-to-r from-accent to-primary group-hover:w-full transition-all duration-300 rounded-full" />
                     </Link>
+                    <Link to="/travel-hotspots" className="text-sm text-muted-foreground hover:text-accent transition-all duration-300 relative group font-poppins font-medium">
+                        Travel Hotspots <Flame className="w-4 h-4 text-accent inline-block" />
+                        <span className="absolute bottom-0 left-0 w-0 h-1 bg-linear-to-r from-accent to-primary group-hover:w-full transition-all duration-300 rounded-full" />
+                    </Link>
                 </div>
                 <div className="flex items-center gap-3">
                     {token? (
@@ -71,6 +75,10 @@ export const Header = () => {
                     ))}
                     <Link to="/places" onClick={() => setMobileMenuOpen(false)} className="block text-sm text-muted-foreground hover:text-accent py-2 transition-all duration-300 font-poppins font-medium">
                         Explore
+                    </Link>
+                     <Link to="/travel-hotspots" onClick={() => setMobileMenuOpen(false)} className="block text-sm text-muted-foreground hover:text-accent py-2 transition-all duration-300 font-poppins font-medium">
+                        Travel Hotspots <Flame className="w-4 h-4 text-accent inline-block" />
+                        <span className="absolute bottom-0 left-0 w-0 h-1 bg-linear-to-r from-accent to-primary group-hover:w-full transition-all duration-300 rounded-full" />
                     </Link>
                 </div>
             )}

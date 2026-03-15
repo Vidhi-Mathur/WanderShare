@@ -1,5 +1,7 @@
 import Place from "../models/place-model.js";
+import Review from "../models/review-model.js";
 import User from "../models/user-model.js";
+import { cloudinaryDelete } from "../util/cloudinary.js";
 
 export const createPlace = async(req, res, next) => {
     try {
@@ -121,8 +123,6 @@ export const getAllPlaces = async(req, res, next) => {
     }
 };
 
-
-
 export const getPlaceByPlaceId = async(req, res, next) => {
     try {
         const { placeId } = req.params
@@ -150,7 +150,7 @@ export const getPlaceByPlaceId = async(req, res, next) => {
     }
 };
 
-export const likeUnlikePlace = async (req, res) => {
+export const likeUnlikePlace = async(req, res, next) => {
   try {
         const userId = req.user._id; 
         const { placeId } = req.params;
@@ -182,5 +182,81 @@ export const likeUnlikePlace = async (req, res) => {
     }     
     catch(err){
         next(err)
+    }
+};
+
+export const getHeatmapData = async (req, res, next) => {
+    try {
+        const places = await Place.find({}, "location likes reviews");
+        const heatmapPoints = places.map(place => {
+            const likeWeight = place.likes?.length || 0;
+            const reviewWeight = place.reviews?.length || 0;
+            //Base weight + engagement
+            const intensity = 1 + likeWeight + reviewWeight;
+            return [ place.location.lat, place.location.long, intensity ];
+        });
+        res.status(200).json({ points: heatmapPoints });
+    } 
+    catch(err){
+        next(err)
+    }
+}
+
+export const updatePlace = async(req, res, next) => {
+    try {
+        const { placeId } = req.params;
+        const userId = req.user._id;
+        const { name, description, location, images } = req.body;
+        const existingPlace = await Place.findById(placeId);
+        if(!existingPlace){
+            return res.status(404).json({ message: "Place not found" });
+        }
+        if(existingPlace.creator.toString() !== userId.toString()){
+            return res.status(403).json({ message: "Not authorized to update this place" });
+        }
+        const removedImages = existingPlace.images.filter(img => !images.includes(img));
+        //Delete removed images from Cloudinary
+        for(const imageUrl of removedImages) {
+            await cloudinaryDelete(imageUrl);
+        }
+        if(name) existingPlace.name = name;
+        if(description) existingPlace.description = description;
+        if(location){
+            existingPlace.location = {
+                address: location.address,
+                lat: location.latitude,
+                long: location.longitude
+            };
+        }
+        if(images) existingPlace.images = images;
+        await existingPlace.save();
+        res.status(200).json({ message: "Place updated successfully", place: existingPlace })
+    }
+    catch(err){
+        next(err);
+    }
+};
+
+export const deletePlace = async(req, res, next) => {
+    try {
+        const { placeId } = req.params;
+        const userId = req.user._id;
+        const existingPlace = await Place.findById(placeId);
+        if(!existingPlace){
+            return res.status(404).json({ message: "Place not found" });
+        }
+        if(existingPlace.creator.toString() !== userId.toString()){
+            return res.status(403).json({ message: "Not authorized to delete this place" });
+        }
+        await User.findByIdAndUpdate(userId,{ $pull: { places: placeId } });
+        await Review.deleteMany({ _id: { $in: existingPlace.reviews } });
+        await Place.findByIdAndDelete(placeId);
+        for(const imageUrl of existingPlace.images){
+            await cloudinaryDelete(imageUrl);
+    }
+        res.status(200).json({ message: "Place deleted successfully" });
+    }
+    catch(err){
+        next(err);
     }
 };

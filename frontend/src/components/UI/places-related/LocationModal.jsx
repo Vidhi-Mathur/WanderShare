@@ -1,5 +1,4 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
 import { X } from "lucide-react";
 
 export const LocationModal = ({ coords, onClose }) => {

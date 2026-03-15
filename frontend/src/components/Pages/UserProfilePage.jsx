@@ -22,6 +22,7 @@ export const UserProfilePage = () => {
             try {
                 const response = await fetch(`http://localhost:3000/user/${userId}`)
                 const result = await response.json()
+                console.log(result)
                 if(!response.ok) {
                     throw new Error(result.message)
               }
@@ -36,6 +37,8 @@ export const UserProfilePage = () => {
         }
         fetchUserProfile()
     }, [userId, token])
+
+    const isCreator = user?._id === userId
 
     if(loading){
         return (
@@ -108,7 +111,12 @@ export const UserProfilePage = () => {
                             {user.places?.length? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {user.places.map((place) => (
-                                      <PlaceCard place={place} key={place._id} />
+                                        <PlaceCard place={place} key={place._id} isCreator={isCreator}  onDelete={(placeId) =>
+                                            setUser((prev) => ({
+                                                ...prev,
+                                                places: prev.places.filter((p) => p._id !== placeId),
+                                            }))
+                                        } />
                                     ))}
                                 </div>
                             ): (
@@ -125,7 +133,12 @@ export const UserProfilePage = () => {
                             {user.likedPlaces?.length? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {user.likedPlaces.map((place) => (
-                                        <PlaceCard key={place._id} place={place} />
+                                        <PlaceCard key={place._id} place={place} isCreator={isCreator} onDelete={(placeId) =>
+                                            setUser((prev) => ({
+                                                ...prev,
+                                                places: prev.places.filter((p) => p._id !== placeId),
+                                            }))
+                                        } />
                                     ))}
                                 </div>
                             ): (

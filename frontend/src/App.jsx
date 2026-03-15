@@ -10,6 +10,8 @@ import { DisplayPlacesPage } from "./components/Pages/DisplayPlacesPage";
 import { PlaceDetailedPage }from "./components/Pages/PlaceDetailedPage";
 import { UserProfilePage } from "./components/Pages/UserProfilePage";
 import { NotFoundPage } from "./components/Pages/NotFoundPage";
+import HeatMapPage from "./components/Pages/HeatMapPage";
+import { EditPlacePage } from "./components/Pages/EditPlacePage";
 
 function App() {
   return (
@@ -19,9 +21,11 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/places" element={<DisplayPlacesPage />} />
+                <Route path="/travel-hotspots" element={<HeatMapPage />} />
                 <Route path="/place/:placeId" element={<PlaceDetailedPage />} />
                 <Route element={<ProtectedRoutes />} >
                     <Route path="/add-place" element={<AddPlacePage />} />
+                    <Route path="/edit-place/:placeId" element={<EditPlacePage />} />
                 </Route>
                 <Route path="/user/:userId" element={<UserProfilePage />} />
                 <Route path="/access-denied" element={<AccessDeniedPage />} />

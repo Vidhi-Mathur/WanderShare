@@ -294,3 +294,7 @@
     animation: glow-pulse 8s ease-in-out infinite 5.33s;
   }
 }
+
+.leaflet-container {
+  background: #97bfa3 !important;
+}
