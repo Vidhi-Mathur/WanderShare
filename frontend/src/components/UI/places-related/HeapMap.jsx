@@ -21,7 +21,14 @@ export const HeatMap = () => {
                     throw new Error(result.message)
                 }
                 if(!containerRef.current) return
+                if(mapRef.current) return
                 mapRef.current = L.map(containerRef.current).setView([28.6139, 77.2090], 5)
+                L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+                    attribution: "&copy; OpenStreetMap contributors"
+                }).addTo(mapRef.current)
+                setTimeout(() => {
+                  mapRef.current.invalidateSize()
+                }, 300)
                 L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png").addTo(mapRef.current)
                 if(result.points?.length){
                     const heat = L.heatLayer(result.points, {
