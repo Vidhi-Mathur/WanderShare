@@ -18,7 +18,6 @@ export const PlaceCard = ({ place, isCreator, onDelete }) => {
 
     const likeToggler = async(e) => {
         e.preventDefault()
-        setLoading(true)
         try {
             const result = await toggleLikePlace(place._id, token)
             setIsLiked(result.liked ?? !isLiked)
@@ -27,9 +26,6 @@ export const PlaceCard = ({ place, isCreator, onDelete }) => {
         catch(err){
           setError(err.message)
         } 
-        finally {
-          setLoading(false)
-        }
     }
 
     const deletePlace = async(e) => {

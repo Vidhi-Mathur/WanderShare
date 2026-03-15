@@ -1,5 +1,5 @@
 export const deletePlaceHandler = async(placeId, token) => {
-    const response = await fetch(`http://localhost:3000/place/${placeId}`, {
+    const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/place/${placeId}`, {
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${token}`,

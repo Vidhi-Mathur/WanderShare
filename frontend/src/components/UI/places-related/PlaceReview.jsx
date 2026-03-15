@@ -28,7 +28,7 @@ export const PlaceReview = ({ reviews, placeId, onReviewSubmitted }) => {
         e.preventDefault()
         setLoading(true)
         setErrors([])
-        const url = mode === "create"? `http://localhost:3000/review/${placeId}`: `http://localhost:3000/review/${review.id}`
+        const url = mode === "create"? `${import.meta.env.VITE_SERVER_URL}/review/${placeId}`: `${import.meta.env.VITE_SERVER_URL}/review/${review.id}`
         const method = mode === "create"? "POST": "PUT"
         const payload = mode === "create"? { rating: review.rating, comment: review.comment }: review
         try {
@@ -65,7 +65,7 @@ export const PlaceReview = ({ reviews, placeId, onReviewSubmitted }) => {
         setLoading(true)
         setErrors([])
         try {
-            const response = await fetch(`http://localhost:3000/review/${reviewId}`, {
+            const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/review/${reviewId}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${token}`,

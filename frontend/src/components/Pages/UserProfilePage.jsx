@@ -20,7 +20,7 @@ export const UserProfilePage = () => {
             setLoading(true)
             setError(null)
             try {
-                const response = await fetch(`http://localhost:3000/user/${userId}`)
+                const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/user/${userId}`)
                 const result = await response.json()
                 console.log(result)
                 if(!response.ok) {

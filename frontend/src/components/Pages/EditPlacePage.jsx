@@ -13,7 +13,7 @@ export const EditPlacePage = () => {
             setLoading(true)
             setError(null)
             try {
-                const response = await fetch(`http://localhost:3000/place/${placeId}`)
+                const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/place/${placeId}`)
                 const result = await response.json()
                 if(!response.ok){
                     throw new Error(result.message)

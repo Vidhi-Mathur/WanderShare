@@ -260,3 +260,41 @@ export const deletePlace = async(req, res, next) => {
         next(err);
     }
 };
+
+export const getNearbyPlaces = async (req, res, next) => {
+    try {
+        const { lat, lng, zoom } = req.query;
+        if(!lat || !lng){
+            return res.status(400).json({ message: "Coordinates required" });
+        }
+        const latitude = parseFloat(lat);
+        const longitude = parseFloat(lng);
+        const zoomLevel = parseInt(zoom)
+        let radius = 5
+        if(zoomLevel <= 4) radius = 500
+        else if(zoomLevel <= 6) radius = 200
+        else if(zoomLevel <= 8) radius = 100
+        else if(zoomLevel <= 10) radius = 50
+        else if(zoomLevel <= 12) radius = 25
+        else if(zoomLevel <= 14) radius = 10
+        const places = await Place.find();
+        const nearbyPlaces = places.filter((place) => {
+            const distance = getDistance(latitude, longitude, place.location.lat, place.location.long);
+            return distance <= radius; 
+        });
+        res.status(200).json({ places: nearbyPlaces });
+    } 
+    catch(err){
+        next(err)
+    }
+}
+
+
+const getDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
