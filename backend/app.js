@@ -36,5 +36,6 @@ app.use((err, req, res, next) => {
     return res.status(code).json({ message });
 });
 
+const PORT = process.env.PORT || 3000;
 //Listening to server
-mongoose.connect(process.env.MONGODB_URI).then(() => app.listen(3000)).catch(() => process.exit(1))
+mongoose.connect(process.env.MONGODB_URI).then(() => app.listen(PORT)).catch(() => process.exit(1))

@@ -29,7 +29,6 @@ export const HeatMap = () => {
                 setTimeout(() => {
                   mapRef.current.invalidateSize()
                 }, 300)
-                L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png").addTo(mapRef.current)
                 if(result.points?.length){
                     const heat = L.heatLayer(result.points, {
                         radius: 65,
